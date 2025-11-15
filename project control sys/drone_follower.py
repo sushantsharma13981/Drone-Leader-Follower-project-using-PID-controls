@@ -297,6 +297,118 @@ def run_manual_control(drone1, drone2):
         print("\nAll graphs saved successfully inside the 'graphs' folder!")
         p.disconnect()
 
+        # -------------------------------------------------------
+        # 6. COMBINED 2×2 RESEARCH-STYLE FIGURE
+        # -------------------------------------------------------
+
+        fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+
+        # ---------- Subplot 1: Yaw-only or RPY ----------
+        axs[0, 0].plot(time_arr, leader_rpy[:, 2], label="Leader Yaw")
+        axs[0, 0].plot(time_arr, follower_rpy[:, 2], label="Follower Yaw")
+        axs[0, 0].set_title("Yaw Tracking")
+        axs[0, 0].set_xlabel("Time (s)")
+        axs[0, 0].set_ylabel("Yaw (rad)")
+        axs[0, 0].grid()
+        axs[0, 0].legend()
+
+        # ---------- Subplot 2: XYZ Position ----------
+        axs[0, 1].plot(time_arr, leader_pos[:, 0], label="Leader X")
+        axs[0, 1].plot(time_arr, leader_pos[:, 1], label="Leader Y")
+        axs[0, 1].plot(time_arr, leader_pos[:, 2], label="Leader Z")
+        axs[0, 1].plot(time_arr, follower_pos[:, 0], '--', label="Follower X")
+        axs[0, 1].plot(time_arr, follower_pos[:, 1], '--', label="Follower Y")
+        axs[0, 1].plot(time_arr, follower_pos[:, 2], '--', label="Follower Z")
+        axs[0, 1].set_title("Position Tracking (XYZ)")
+        axs[0, 1].set_xlabel("Time (s)")
+        axs[0, 1].set_ylabel("Position (m)")
+        axs[0, 1].grid()
+        axs[0, 1].legend()
+
+        # ---------- Subplot 3: Velocity ----------
+        axs[1, 0].plot(time_arr, leader_vel[:, 0], label="Leader Vx")
+        axs[1, 0].plot(time_arr, leader_vel[:, 1], label="Leader Vy")
+        axs[1, 0].plot(time_arr, leader_vel[:, 2], label="Leader Vz")
+        axs[1, 0].plot(time_arr, follower_vel[:, 0], '--', label="Follower Vx")
+        axs[1, 0].plot(time_arr, follower_vel[:, 1], '--', label="Follower Vy")
+        axs[1, 0].plot(time_arr, follower_vel[:, 2], '--', label="Follower Vz")
+        axs[1, 0].set_title("Velocity Tracking (Vx, Vy, Vz)")
+        axs[1, 0].set_xlabel("Time (s)")
+        axs[1, 0].set_ylabel("Velocity (m/s)")
+        axs[1, 0].grid()
+        axs[1, 0].legend()
+
+        # ---------- Subplot 4: Attitude Error ----------
+        axs[1, 1].plot(time_arr, rpy_err[:, 0], label="Roll Error")
+        axs[1, 1].plot(time_arr, rpy_err[:, 1], label="Pitch Error")
+        axs[1, 1].plot(time_arr, rpy_err[:, 2], label="Yaw Error")
+        axs[1, 1].set_title("Attitude Error (Leader - Follower)")
+        axs[1, 1].set_xlabel("Time (s)")
+        axs[1, 1].set_ylabel("Error (rad)")
+        axs[1, 1].grid()
+        axs[1, 1].legend()
+
+        plt.tight_layout()
+        plt.savefig(f"{save_dir}/combined_2x2_results.png", dpi=300)
+        plt.close()
+
+        print(" - combined_2x2_results.png")
+
+        # -------------------------------------------------------
+        # 7. COMBINED GROUP OF 3 (RPY, XYZ, VELOCITY)
+        # -------------------------------------------------------
+        fig, axs = plt.subplots(3, 1, figsize=(14, 12))
+
+        # ---------- Group 1: RPY Tracking ----------
+        axs[0].plot(time_arr, leader_rpy[:, 0], label="Leader Roll")
+        axs[0].plot(time_arr, leader_rpy[:, 1], label="Leader Pitch")
+        axs[0].plot(time_arr, leader_rpy[:, 2], label="Leader Yaw")
+
+        axs[0].plot(time_arr, follower_rpy[:, 0], '--', label="Follower Roll")
+        axs[0].plot(time_arr, follower_rpy[:, 1], '--', label="Follower Pitch")
+        axs[0].plot(time_arr, follower_rpy[:, 2], '--', label="Follower Yaw")
+
+        axs[0].set_title("RPY Tracking (Roll, Pitch, Yaw)")
+        axs[0].set_xlabel("Time (s)")
+        axs[0].set_ylabel("Angle (rad)")
+        axs[0].grid()
+        axs[0].legend()
+
+        # ---------- Group 2: XYZ Positions ----------
+        axs[1].plot(time_arr, leader_pos[:, 0], label="Leader X")
+        axs[1].plot(time_arr, leader_pos[:, 1], label="Leader Y")
+        axs[1].plot(time_arr, leader_pos[:, 2], label="Leader Z")
+
+        axs[1].plot(time_arr, follower_pos[:, 0], '--', label="Follower X")
+        axs[1].plot(time_arr, follower_pos[:, 1], '--', label="Follower Y")
+        axs[1].plot(time_arr, follower_pos[:, 2], '--', label="Follower Z")
+
+        axs[1].set_title("XYZ Position Tracking")
+        axs[1].set_xlabel("Time (s)")
+        axs[1].set_ylabel("Position (m)")
+        axs[1].grid()
+        axs[1].legend()
+
+        # ---------- Group 3: Velocities ----------
+        axs[2].plot(time_arr, leader_vel[:, 0], label="Leader Vx")
+        axs[2].plot(time_arr, leader_vel[:, 1], label="Leader Vy")
+        axs[2].plot(time_arr, leader_vel[:, 2], label="Leader Vz")
+
+        axs[2].plot(time_arr, follower_vel[:, 0], '--', label="Follower Vx")
+        axs[2].plot(time_arr, follower_vel[:, 1], '--', label="Follower Vy")
+        axs[2].plot(time_arr, follower_vel[:, 2], '--', label="Follower Vz")
+
+        axs[2].set_title("Velocity Tracking (Vx, Vy, Vz)")
+        axs[2].set_xlabel("Time (s)")
+        axs[2].set_ylabel("Velocity (m/s)")
+        axs[2].grid()
+        axs[2].legend()
+
+        plt.tight_layout()
+        plt.savefig(f"{save_dir}/combined_grouped_3.png", dpi=300)
+        plt.close()
+
+        print(" - combined_grouped_3.png")
 
 
 if __name__ == "__main__":
